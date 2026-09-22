@@ -1,21 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Написать класс Cache
 
 class Cache {
   private cache: Record<string, unknown> = {};
 
-  constructor(private readonly fn: (...args: unknown[]) => unknown) {}
+  constructor(private readonly fn: (...args: number[]) => unknown) {}
 
-  call(...args: unknown[]) {}
+  call(...args: number[]) {
+    const key = this.fn.toString();
+    if (key in this.cache) {
+      return this.cache[key];
+    }
+    const res = this.fn(...args);
+    this.cache[key] = res;
+    return res;
+  }
 
-  clear(): void {}
+  clear(): void {
+    this.cache = {};
+  }
 
   get size(): number {
-    return 0;
+    return Object.keys(this.cache).length;
   }
 }
 
-const func = new Cache(() => Math.random());
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const func = new Cache((_num1: number, _num2: number) => Math.random());
 
 console.log(func.call());
 console.log(func.call());
